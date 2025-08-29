@@ -22,9 +22,9 @@
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 			<key>Title</key>
-			<string>Acknowledgements</string>
+			<string>General settings</string>
 			<key>File</key>
-			<string>Acknowledgements</string>
+			<string>GeneralSettings</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -33,6 +33,14 @@
 			<string>Connection settings</string>
 			<key>File</key>
 			<string>ConnectionSettings</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+			<key>Title</key>
+			<string>Acknowledgements</string>
+			<key>File</key>
+			<string>Acknowledgements</string>
 		</dict>
 	</array>
 </dict>

@@ -87,6 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             SharedUtils.identifyAndConfigureBranding()
         }
         SharedUtils.registerUserDefaults()
+
         let baseDb = BaseDb.sharedInstance
         if baseDb.isReady {
             // When the app launch after user tap on notification (originally was not running / not in background), except incoming calls which are handled separately.
@@ -119,6 +120,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             self.nwReachability = reachability
         }
+
         return true
     }
 
@@ -156,6 +158,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         self.appIsStarting = false
+
+        print("Session resumed, setting UI style to \(SharedUtils.uiMode)")
+        UiUtils.setUserInterfaceStyle(SharedUtils.uiMode)
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

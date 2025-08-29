@@ -764,6 +764,21 @@ class UiUtils {
         let len = UiUtils.kPreviewMaxFileNameLength / 2
         return original.prefix(len) + "…" + original.suffix(len)
     }
+
+    /// Set dark/light/default UI mode.
+    public static func setUserInterfaceStyle(_ style: UIUserInterfaceStyle) {
+        print("Setting interface style: \(style)")
+
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            windowScene.windows.forEach { window in
+                window.overrideUserInterfaceStyle = style
+                print("Style set: \(style)")
+            }
+        }
+
+        // Save the preference.
+        SharedUtils.uiMode = style
+    }
 }
 
 extension UIViewController {

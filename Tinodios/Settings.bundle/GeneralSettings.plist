@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSRadioGroupSpecifier</string>
+			<key>Title</key>
+			<string>Choose interface style</string>
+			<key>Key</key>
+			<string>tinodePrefUIMode</string>
+			<key>DefaultValue</key>
+			<string>default</string>
+			<key>Values</key>
+			<array>
+				<string>default</string>
+				<string>light</string>
+				<string>dark</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Same as system</string>
+				<string>Light</string>
+				<string>Dark</string>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Send on Enter</string>
+			<key>Key</key>
+			<string>tinodePrefSendOnEnter</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+	</array>
+	<key>Title</key>
+	<string>General Settings</string>
+	<key>StringsTable</key>
+	<string>GeneralSettings</string>
+</dict>
+</plist>

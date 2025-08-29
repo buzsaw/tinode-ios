@@ -346,6 +346,7 @@ class MessageViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(sendAttachment(notification:)), name: Notification.Name(MessageViewController.kNotificationSendAttachment), object: nil)
 
         // Collection View setup
+        collectionView.backgroundColor = .systemBackground
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.keyboardDismissMode = .interactive
         collectionView.alwaysBounceVertical = true

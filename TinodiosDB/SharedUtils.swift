@@ -2,7 +2,7 @@
 //  SharedUtils.swift
 //  TinodiosDB
 //
-//  Copyright © 2020-2022 Tinode. All rights reserved.
+//  Copyright © 2020-2025 Tinode. All rights reserved.
 //
 
 import Foundation
@@ -19,6 +19,9 @@ public class SharedUtils {
     static public let kTinodePrefReadReceipts = "tinodePrefSendReadReceipts"
     static public let kTinodePrefTypingNotifications = "tinodePrefTypingNoficications"
     static public let kTinodePrefAppLaunchedBefore = "tinodePrefAppLaunchedBefore"
+
+    static public let kTinodePrefUIMode = "tinodePrefUIMode"
+    static public let kTinodePrefSendOnEnter = "tinodePrefSendOnEnter"
 
     static public let kTinodePrefTosUrl = "tinodePrefTosUrl"
     static public let kTinodePrefServiceName = "tinodePrefServiceName"
@@ -192,9 +195,11 @@ public class SharedUtils {
 
     public static func registerUserDefaults() {
         /// Here you can give default values to your UserDefault keys
-        SharedUtils.kAppDefaults.register(defaults: [
-            SharedUtils.kTinodePrefReadReceipts: true,
-            SharedUtils.kTinodePrefTypingNotifications: true
+        kAppDefaults.register(defaults: [
+            kTinodePrefReadReceipts: true,
+            kTinodePrefTypingNotifications: true,
+            kTinodePrefSendOnEnter: false,
+            kTinodePrefUIMode: "default",
         ])
 
         let (hostName, _) = ConnectionSettingsHelper.getConnectionSettings()
@@ -203,8 +208,43 @@ public class SharedUtils {
             ConnectionSettingsHelper.setHostName(Bundle.main.object(forInfoDictionaryKey: "HOST_NAME") as? String)
             ConnectionSettingsHelper.setUseTLS(Bundle.main.object(forInfoDictionaryKey: "USE_TLS") as? String)
         }
+
         if !SharedUtils.appMetaVersionUpToDate() {
             BaseDb.log.info("App started for the first time.")
+        }
+    }
+
+    public static var uiMode: UIUserInterfaceStyle {
+        get {
+            let uiMode = UserDefaults.standard.string(forKey: kTinodePrefUIMode)
+            return SharedUtils.uiModeParse(uiMode)
+        }
+
+        set {
+            // Save the preference.
+            UserDefaults.standard.set(SharedUtils.uiModePrint(newValue), forKey: kTinodePrefUIMode)
+        }
+    }
+
+    private static func uiModeParse(_ uiMode: String?) -> UIUserInterfaceStyle {
+        switch uiMode ?? "default" {
+        case "light":
+            return .light
+        case "dark":
+            return .dark
+        default:
+            return .unspecified
+        }
+    }
+
+    private static func uiModePrint(_ mode: UIUserInterfaceStyle) -> String {
+        switch mode {
+        case .light:
+            return "light"
+        case .dark:
+            return "dark"
+        default:
+            return "default"
         }
     }
 
