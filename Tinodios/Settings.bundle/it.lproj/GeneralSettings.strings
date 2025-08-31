@@ -1,12 +1,6 @@
-/* (No Comment) */
-"Acknowledgements" = "致謝";
-
 /* A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences. */
-"Bundle version" = "套件版本";
+"Choose interface style" = "Scegli stile interfaccia";
 
 /* (No Comment) */
-"Connection settings" = "連線設定";
-
-/* (No Comment) */
-"General settings" = "一般設定";
+"Send on Enter" = "Invia con Invio";
 

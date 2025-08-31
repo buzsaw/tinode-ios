@@ -831,7 +831,7 @@ Menu item: video call</note>
       </trans-unit>
       <trans-unit id="undefined" xml:space="preserve">
         <source>undefined</source>
-        <target state="translated">non definito</target>
+        <target>non definito</target>
         <note>Button with missing text
    Placeholder for missing file name
    Placeholder for missing file type</note>
@@ -845,7 +845,7 @@ Menu item: video call</note>
     <body>
       <trans-unit id="An error occurred while validating the phone number." xml:space="preserve">
         <source>An error occurred while validating the phone number.</source>
-        <target state="translated">Si è verificato un errore durante la convalida del numero di telefono.</target>
+        <target>Si è verificato un errore durante la convalida del numero di telefono.</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
       <trans-unit id="Phone number is ambiguous." xml:space="preserve">
@@ -2037,15 +2037,47 @@ Menu item: video call</note>
       </trans-unit>
     </body>
   </file>
+  <file original="Tinodios/Settings.bundle/en.lproj/GeneralSettings.strings" datatype="plaintext" source-language="en" target-language="it">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="16.4" build-num="16F6"/>
+    </header>
+    <body>
+      <trans-unit id="Choose interface style" xml:space="preserve">
+        <source>Choose interface style</source>
+        <target state="translated">Scegli stile interfaccia</target>
+        <note>A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences.</note>
+      </trans-unit>
+      <trans-unit id="Send on Enter" xml:space="preserve">
+        <source>Send on Enter</source>
+        <target state="translated">Invia con Invio</target>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
   <file original="Tinodios/Settings.bundle/en.lproj/Root.strings" source-language="en" target-language="it" datatype="plaintext">
     <header>
       <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="16.4" build-num="16F6"/>
     </header>
     <body>
+      <trans-unit id="Acknowledgements" xml:space="preserve">
+        <source>Acknowledgements</source>
+        <target state="translated">Riconoscimenti</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="Bundle version" xml:space="preserve">
+        <source>Bundle version</source>
+        <target state="translated">Versione bundle</target>
+        <note>A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences.</note>
+      </trans-unit>
       <trans-unit id="Connection settings" xml:space="preserve">
         <source>Connection settings</source>
         <target>Impostazioni di connessione</target>
-        <note>A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences.</note>
+        <note/>
+      </trans-unit>
+      <trans-unit id="General settings" xml:space="preserve">
+        <source>General settings</source>
+        <target state="translated">Impostazioni generali</target>
+        <note/>
       </trans-unit>
     </body>
   </file>

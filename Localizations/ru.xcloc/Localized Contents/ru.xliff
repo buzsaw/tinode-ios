@@ -2021,15 +2021,47 @@ Menu item: video call</note>
       </trans-unit>
     </body>
   </file>
+  <file original="Tinodios/Settings.bundle/en.lproj/GeneralSettings.strings" datatype="plaintext" source-language="en" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="16.4" build-num="16F6"/>
+    </header>
+    <body>
+      <trans-unit id="Choose interface style" xml:space="preserve">
+        <source>Choose interface style</source>
+        <target state="translated">Выбрать стиль интерфейс</target>
+        <note>A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences.</note>
+      </trans-unit>
+      <trans-unit id="Send on Enter" xml:space="preserve">
+        <source>Send on Enter</source>
+        <target state="translated">Отправлять на Enter</target>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
   <file original="Tinodios/Settings.bundle/en.lproj/Root.strings" source-language="en" target-language="ru" datatype="plaintext">
     <header>
       <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="16.4" build-num="16F6"/>
     </header>
     <body>
+      <trans-unit id="Acknowledgements" xml:space="preserve">
+        <source>Acknowledgements</source>
+        <target state="translated">Благодарности</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="Bundle version" xml:space="preserve">
+        <source>Bundle version</source>
+        <target state="translated">Версия пакета</target>
+        <note>A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences.</note>
+      </trans-unit>
       <trans-unit id="Connection settings" xml:space="preserve">
         <source>Connection settings</source>
         <target>Настройки соединения</target>
-        <note>A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences.</note>
+        <note/>
+      </trans-unit>
+      <trans-unit id="General settings" xml:space="preserve">
+        <source>General settings</source>
+        <target state="translated">Основные настройки</target>
+        <note/>
       </trans-unit>
     </body>
   </file>

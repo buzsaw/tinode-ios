@@ -1,3 +1,12 @@
+/* (No Comment) */
+"Acknowledgements" = "Riconoscimenti";
+
 /* A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences. */
+"Bundle version" = "Versione bundle";
+
+/* (No Comment) */
 "Connection settings" = "Impostazioni di connessione";
+
+/* (No Comment) */
+"General settings" = "Impostazioni generali";
 

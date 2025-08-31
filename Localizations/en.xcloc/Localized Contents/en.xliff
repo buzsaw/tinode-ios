@@ -2038,15 +2038,47 @@ Menu item: video call</note>
       </trans-unit>
     </body>
   </file>
+  <file original="Tinodios/Settings.bundle/en.lproj/GeneralSettings.strings" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="16.4" build-num="16F6"/>
+    </header>
+    <body>
+      <trans-unit id="Choose interface style" xml:space="preserve">
+        <source>Choose interface style</source>
+        <target>Choose interface style</target>
+        <note>A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences.</note>
+      </trans-unit>
+      <trans-unit id="Send on Enter" xml:space="preserve">
+        <source>Send on Enter</source>
+        <target>Send on Enter</target>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
   <file original="Tinodios/Settings.bundle/en.lproj/Root.strings" source-language="en" target-language="en" datatype="plaintext">
     <header>
       <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="16.4" build-num="16F6"/>
     </header>
     <body>
+      <trans-unit id="Acknowledgements" xml:space="preserve">
+        <source>Acknowledgements</source>
+        <target>Acknowledgements</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="Bundle version" xml:space="preserve">
+        <source>Bundle version</source>
+        <target>Bundle version</target>
+        <note>A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences.</note>
+      </trans-unit>
       <trans-unit id="Connection settings" xml:space="preserve">
         <source>Connection settings</source>
         <target>Connection settings</target>
-        <note>A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences.</note>
+        <note/>
+      </trans-unit>
+      <trans-unit id="General settings" xml:space="preserve">
+        <source>General settings</source>
+        <target>General settings</target>
+        <note/>
       </trans-unit>
     </body>
   </file>
