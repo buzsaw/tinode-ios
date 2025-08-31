@@ -12,3 +12,7 @@ USE_TLS = NO
 
 // App Settings
 APP_NAME = Tinode (test)
+
+// Versioning. The values are automatically updated by a build script.
+GIT_TAG = 1.24.3
+GIT_COMMIT_COUNT = 1834

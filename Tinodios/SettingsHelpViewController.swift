@@ -2,7 +2,7 @@
 //  SettingsHelpViewController.swift
 //  Tinodios
 //
-//  Copyright © 2020 Tinode. All rights reserved.
+//  Copyright © 2020-2005 Tinode. All rights reserved.
 //
 
 import MessageUI
@@ -49,8 +49,8 @@ class SettingsHelpViewController: UITableViewController {
             action: #selector(SettingsHelpViewController.termsOfUseClicked),
             actionTarget: self)
 
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.0.0"
-        let versionCode = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0"
+        let version = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0.0.0"
+        let versionCode = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
         self.appVersion.text = "\(version) (\(versionCode))"
 
         self.tosUrl = URL(string: SharedUtils.tosUrl ?? "https://tinode.co/terms.html")
