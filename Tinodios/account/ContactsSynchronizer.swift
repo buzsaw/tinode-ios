@@ -137,8 +137,7 @@ class ContactsSynchronizer {
     private func synchronizeInternal() {
         var success = false
         let contactsManager = ContactsManager.default
-        let t0 = SharedUtils.getAuthToken()
-        if let token = t0, !token.isEmpty, let contacts = self.fetchContacts(), !contacts.isEmpty {
+        if let token = SharedUtils.authToken, !token.isEmpty, let contacts = self.fetchContacts(), !contacts.isEmpty {
             Cache.log.info("ContactsSynchronizer - starting sync.")
             let contacts: String = contactsToQueryString(contacts: contacts)
             var lastSyncMarker = self.serverSyncMarker
