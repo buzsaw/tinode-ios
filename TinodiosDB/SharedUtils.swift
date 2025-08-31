@@ -146,13 +146,13 @@ public class SharedUtils {
         return true
     }
 
-    public static func getAuthToken() -> String? {
+    public static var authToken: String? {
         guard SharedUtils.appMetaVersionUpToDate() else { return nil }
         return SharedUtils.kAppKeychain.string(
             forKey: SharedUtils.kTokenKey, withAccessibility: .afterFirstUnlock)
     }
 
-    public static func getAuthTokenExpiryDate() -> Date? {
+    public static var authTokenExpiryDate: Date? {
          guard let expString = SharedUtils.kAppKeychain.string(
              forKey: SharedUtils.kTokenExpiryKey, withAccessibility: .afterFirstUnlock) else { return nil }
          return Formatter.rfc3339.date(from: expString)
@@ -214,6 +214,16 @@ public class SharedUtils {
         }
     }
 
+    public static var isSendOnEnterEnabled: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: kTinodePrefSendOnEnter)
+        }
+
+        set {
+            UserDefaults.standard.set(newValue, forKey: kTinodePrefSendOnEnter)
+        }
+    }
+
     public static var uiMode: UIUserInterfaceStyle {
         get {
             let uiMode = UserDefaults.standard.string(forKey: kTinodePrefUIMode)
@@ -253,11 +263,11 @@ public class SharedUtils {
             BaseDb.log.error("Connect&Login Sync - missing user name")
             return false
         }
-        guard let token = SharedUtils.getAuthToken(), !token.isEmpty else {
+        guard let token = SharedUtils.authToken, !token.isEmpty else {
             BaseDb.log.error("Connect&Login Sync - missing auth token")
             return false
         }
-        if let tokenExpires = SharedUtils.getAuthTokenExpiryDate(), tokenExpires < Date() {
+        if let tokenExpires = SharedUtils.authTokenExpiryDate, tokenExpires < Date() {
             // Token has expired.
             // TODO: treat tokenExpires == nil as a reason to reject.
             BaseDb.log.error("Connect&Login Sync - auth token expired")

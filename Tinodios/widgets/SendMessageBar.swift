@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import TinodiosDB
 
 enum AudioBarAction {
     case start
@@ -267,6 +268,7 @@ class SendMessageBar: UIView {
     // MARK: - Private properties
 
     private var inputFieldMaxHeight: CGFloat = 120
+    private var sendOnEnterEnabled: Bool = false
 
     // MARK: - Initializers
 
@@ -326,6 +328,8 @@ class SendMessageBar: UIView {
         togglePendingPreviewBar(withMessage: nil)
 
         showAudioBar(.hidden)
+
+        sendOnEnterEnabled = SharedUtils.isSendOnEnterEnabled
     }
 
     // MARK: - Subviews handling
@@ -468,6 +472,16 @@ class SendMessageBar: UIView {
 }
 
 extension SendMessageBar: UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if sendOnEnterEnabled {
+            if text.count > 0 && text.last == "\n" {
+                send(UIButton())
+                return false
+            }
+        }
+        return true
+    }
+
     func textViewDidChange(_ textView: UITextView) {
         delegate?.sendMessageBar(textChangedTo: textView.text)
 
