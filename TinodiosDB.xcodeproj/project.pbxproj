@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0ACD8F7824AC579700043871 /* SharedUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACD8F7724AC579700043871 /* SharedUtils.swift */; };
-		0ACD8F7A24AC6EAC00043871 /* ConnectionSettingsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACD8F7924AC5DAB00043871 /* ConnectionSettingsHelper.swift */; };
 		0ACE9E552381342B006BE575 /* TinodiosDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ACE9E532381342B006BE575 /* TinodiosDB.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0ACE9E662381356B006BE575 /* StoredMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACE9E632381356B006BE575 /* StoredMessage.swift */; };
 		0ACE9E672381356B006BE575 /* TopicDb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACE9E642381356B006BE575 /* TopicDb.swift */; };
@@ -24,7 +23,6 @@
 
 /* Begin PBXFileReference section */
 		0ACD8F7724AC579700043871 /* SharedUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedUtils.swift; sourceTree = "<group>"; };
-		0ACD8F7924AC5DAB00043871 /* ConnectionSettingsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionSettingsHelper.swift; sourceTree = "<group>"; };
 		0ACD8F7B24AC704C00043871 /* Pods_TinodeSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_TinodeSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0ACE9E502381342B006BE575 /* TinodiosDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TinodiosDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0ACE9E532381342B006BE575 /* TinodiosDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TinodiosDB.h; sourceTree = "<group>"; };
@@ -79,7 +77,6 @@
 			children = (
 				0ACE9E612381356B006BE575 /* AccountDb.swift */,
 				0ACE9E602381356B006BE575 /* BaseDb.swift */,
-				0ACD8F7924AC5DAB00043871 /* ConnectionSettingsHelper.swift */,
 				0ACE9E5F2381356B006BE575 /* MessageDb.swift */,
 				0ACD8F7724AC579700043871 /* SharedUtils.swift */,
 				0ACE9E652381356B006BE575 /* SqlStore.swift */,
@@ -220,9 +217,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TinodiosDB/Pods-TinodiosDB-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TinodiosDB/Pods-TinodiosDB-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -236,7 +237,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0ACD8F7A24AC6EAC00043871 /* ConnectionSettingsHelper.swift in Sources */,
 				0ACE9E6C2381356B006BE575 /* AccountDb.swift in Sources */,
 				0ACE9E6B2381356B006BE575 /* BaseDb.swift in Sources */,
 				0ACD8F7824AC579700043871 /* SharedUtils.swift in Sources */,

@@ -30,6 +30,9 @@ public class SharedUtils {
     static public let kTinodePrefSmallIcon = "tinodePrefSmallIcon"
     static public let kTinodePrefLargeIcon = "tinodePrefLargeIcon"
 
+    static public let kPrefHostName = "host_name_preference"
+    static public let kPrefUseTLS = "use_tls_preference"
+
     // App Tinode api key.
     private static let kApiKey = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K"
 
@@ -48,11 +51,11 @@ public class SharedUtils {
 
     // Default connection params.
     #if DEBUG
-        public static let kHostName = "127.0.0.1:6060" // localhost
-        public static let kUseTLS = false
+        public static let kDefaultHostName = "127.0.0.1:6060" // localhost
+        public static let kDefaultUseTLS = false
     #else
-        public static let kHostName = "api.tinode.co" // production cluster
-        public static let kUseTLS = true
+        public static let kDefaultHostName = "api.tinode.co" // production cluster
+        public static let kDefaultUseTLS = true
     #endif
 
     // Returns true if the app is being launched for the first time.
@@ -194,22 +197,27 @@ public class SharedUtils {
     }
 
     public static func registerUserDefaults() {
-        /// Here you can give default values to your UserDefault keys
+        /// Give default values to your UserDefaults keys
         kAppDefaults.register(defaults: [
             kTinodePrefReadReceipts: true,
             kTinodePrefTypingNotifications: true,
             kTinodePrefSendOnEnter: false,
             kTinodePrefUIMode: "default",
+
+            kTinodePrefReadReceipts: true,
+            kTinodePrefTypingNotifications: true
         ])
 
-        let (hostName, _) = ConnectionSettingsHelper.getConnectionSettings()
+        // Make sure changes are copied.
+        syncUserDefaults()
+
+        let (hostName, _) = getConnectionSettings()
         if hostName == nil {
             // If hostname is nil, sync values to defaults
-            ConnectionSettingsHelper.setHostName(Bundle.main.object(forInfoDictionaryKey: "HOST_NAME") as? String)
-            ConnectionSettingsHelper.setUseTLS(Bundle.main.object(forInfoDictionaryKey: "USE_TLS") as? String)
+            setConnectionSettings(Bundle.main.object(forInfoDictionaryKey: "HOST_NAME") as? String, Bundle.main.object(forInfoDictionaryKey: "USE_TLS") as? String)
         }
 
-        if !SharedUtils.appMetaVersionUpToDate() {
+        if !appMetaVersionUpToDate() {
             BaseDb.log.info("App started for the first time.")
         }
     }
@@ -255,6 +263,21 @@ public class SharedUtils {
             return "dark"
         default:
             return "default"
+        }
+    }
+
+    /// Copy values from UserDefaults.standard to kAppDefaults.
+    public static func syncUserDefaults() {
+        let settingsKeys = [
+            kPrefHostName,
+            kPrefUseTLS
+        ]
+
+        for key in settingsKeys {
+            if let value = UserDefaults.standard.object(forKey: key) {
+                print("syncUserDefaults: \(key)=\(value)")
+                kAppDefaults.set(value, forKey: key)
+            }
         }
     }
 
@@ -313,6 +336,23 @@ public class SharedUtils {
             }
         }
         return success
+    }
+
+    static func getConnectionSettings() -> (hostName: String?, useTLS: Bool?) {
+        print("getConnectionSettings \(String(describing: kAppDefaults.string(forKey: kPrefHostName))), \(String(describing: kAppDefaults.string(forKey: kPrefUseTLS)))")
+        return (hostName: kAppDefaults.string(forKey: kPrefHostName), useTLS: kAppDefaults.bool(forKey: kPrefUseTLS))
+    }
+
+    static func setConnectionSettings(_ hostName: String?, _ useTLS: String?) {
+        print("setConnectionSettings \(hostName ?? "nil"), \(useTLS ?? "nil")")
+        if hostName != nil {
+            kAppDefaults.set(hostName, forKey: kPrefHostName)
+            UserDefaults.standard.set(hostName, forKey: kPrefHostName)
+        }
+        if useTLS != nil {
+            kAppDefaults.set(useTLS, forKey: kPrefUseTLS)
+            UserDefaults.standard.set(useTLS, forKey: kPrefUseTLS)
+        }
     }
 
     // Synchronously fetches description for topic |topicName|
@@ -464,9 +504,8 @@ public class SharedUtils {
                     SharedUtils.privacyUrl = privacyUrl.absoluteString
                 }
                 if let apiUrl = URL(string: responseJSON["api_url"] as? String ?? "") {
-                    ConnectionSettingsHelper.setHostName(apiUrl.host!)
-                    let useTls = ["https", "ws"].contains(apiUrl.scheme)
-                    ConnectionSettingsHelper.setUseTLS(useTls ? "true" : "false")
+                    let useTLS = ["https", "ws"].contains(apiUrl.scheme) ? "true" : "false"
+                    setConnectionSettings(apiUrl.host!, useTLS)
                 }
                 if let id = responseJSON["id"] as? String {
                     SharedUtils.appId = id
@@ -499,8 +538,9 @@ public class SharedUtils {
 
 extension Tinode {
     public static func getConnectionParams() -> (String, Bool) {
-        let (hostName, useTLS) = ConnectionSettingsHelper.getConnectionSettings()
-        return (hostName ?? SharedUtils.kHostName, useTLS ?? SharedUtils.kUseTLS)
+        let (hostName, useTLS) = SharedUtils.getConnectionSettings()
+        print("getConnectionSettings HOST: \(hostName ?? "nil") TLS: \(String(describing: useTLS))")
+        return (hostName ?? SharedUtils.kDefaultHostName, useTLS ?? SharedUtils.kDefaultUseTLS)
     }
 
     @discardableResult

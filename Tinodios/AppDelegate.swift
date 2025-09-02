@@ -141,6 +141,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         self.appIsStarting = true
+        SharedUtils.syncUserDefaults()
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
