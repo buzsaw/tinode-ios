@@ -200,11 +200,6 @@ public class SharedUtils {
         /// Give default values to your UserDefaults keys
         kAppDefaults.register(defaults: [
             kTinodePrefReadReceipts: true,
-            kTinodePrefTypingNotifications: true,
-            kTinodePrefSendOnEnter: false,
-            kTinodePrefUIMode: "default",
-
-            kTinodePrefReadReceipts: true,
             kTinodePrefTypingNotifications: true
         ])
 
@@ -275,7 +270,6 @@ public class SharedUtils {
 
         for key in settingsKeys {
             if let value = UserDefaults.standard.object(forKey: key) {
-                print("syncUserDefaults: \(key)=\(value)")
                 kAppDefaults.set(value, forKey: key)
             }
         }
@@ -339,12 +333,10 @@ public class SharedUtils {
     }
 
     static func getConnectionSettings() -> (hostName: String?, useTLS: Bool?) {
-        print("getConnectionSettings \(String(describing: kAppDefaults.string(forKey: kPrefHostName))), \(String(describing: kAppDefaults.string(forKey: kPrefUseTLS)))")
         return (hostName: kAppDefaults.string(forKey: kPrefHostName), useTLS: kAppDefaults.bool(forKey: kPrefUseTLS))
     }
 
     static func setConnectionSettings(_ hostName: String?, _ useTLS: String?) {
-        print("setConnectionSettings \(hostName ?? "nil"), \(useTLS ?? "nil")")
         if hostName != nil {
             kAppDefaults.set(hostName, forKey: kPrefHostName)
             UserDefaults.standard.set(hostName, forKey: kPrefHostName)
@@ -539,7 +531,6 @@ public class SharedUtils {
 extension Tinode {
     public static func getConnectionParams() -> (String, Bool) {
         let (hostName, useTLS) = SharedUtils.getConnectionSettings()
-        print("getConnectionSettings HOST: \(hostName ?? "nil") TLS: \(String(describing: useTLS))")
         return (hostName ?? SharedUtils.kDefaultHostName, useTLS ?? SharedUtils.kDefaultUseTLS)
     }
 

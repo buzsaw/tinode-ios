@@ -159,8 +159,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         self.appIsStarting = false
-
-        print("Session resumed, setting UI style to \(SharedUtils.uiMode)")
         UiUtils.setUserInterfaceStyle(SharedUtils.uiMode)
     }
 
