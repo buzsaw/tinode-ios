@@ -292,7 +292,7 @@ extension TopicGeneralViewController: ImagePickerDelegate {
 
 extension TopicGeneralViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
-        print("textFieldDidEndEditing \(textField.text ?? "")")
+        debugPrint("textFieldDidEndEditing \(textField.text ?? "")")
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

@@ -2,7 +2,7 @@
 //  CallViewController.swift
 //  Tinodios
 //
-//  Copyright © 2022 Tinode LLC. All rights reserved.
+//  Copyright © 2022-2025 Tinode LLC. All rights reserved.
 //
 
 
@@ -315,7 +315,7 @@ class WebRTCClient: NSObject {
 
 extension WebRTCClient: RTCDataChannelDelegate {
     func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {
-        print("channel state \(dataChannel.readyState)")
+        debugPrint("channel state \(dataChannel.readyState)")
         switch dataChannel.readyState {
         case .open:
             if !(self.delegate?.isAudioOnlyCall ?? true) {
@@ -622,7 +622,7 @@ class CallViewController: UIViewController {
             case "ringing":
                 DispatchQueue.main.async { self.delegate?.handleRinging() }
             default:
-                print(info)
+                debugPrint(info)
             }
         }
     }

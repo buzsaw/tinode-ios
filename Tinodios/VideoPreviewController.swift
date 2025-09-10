@@ -2,7 +2,7 @@
 //  VideoPreviewController.swift
 //  Tinodios
 //
-//  Copyright © 2022 Tinode LLC. All rights reserved.
+//  Copyright © 2022-2025 Tinode LLC. All rights reserved.
 //
 
 import MobileVLCKit
@@ -317,7 +317,7 @@ extension VideoPreviewController: VLCMediaPlayerDelegate {
             spinner.startAnimating()
             spinner.isHidden = false
         case .buffering:
-            print("buffering")
+            debugPrint("buffering")
         case .error:
             spinner.stopAnimating()
             spinner.isHidden = true
