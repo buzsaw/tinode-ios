@@ -2,7 +2,7 @@
 //  Types.swift
 //  TinodeSDK
 //
-//  Copyright © 2019-2022 Tinode LLC. All rights reserved.
+//  Copyright © 2019-2025 Tinode LLC. All rights reserved.
 //
 
 public protocol Mergeable {
@@ -52,6 +52,27 @@ extension PrivateType: Mergeable {
             self[k] = v
         }
         return !anotherPT.isEmpty
+    }
+
+    public func getPinnedRank(topicName: String) -> Int {
+        guard let tpins = getPinnedTopics(), let idx = tpins.firstIndex(of: topicName) else {
+            return 0
+        }
+        return tpins.count - idx
+    }
+
+    public func getPinnedTopics() -> [String]? {
+        guard let raw = self["tpin"]?.asArray() else { return nil }
+        let tpins = raw.compactMap { $0.asString() }
+        return tpins.isEmpty ? nil : tpins
+    }
+
+    public mutating func setPinnedTopics(_ tpins: [String]?) {
+        guard let tpins = tpins, !tpins.isEmpty else {
+            self["tpin"] = nil
+            return
+        }
+        self["tpin"] = .array(tpins.map { .string($0) })
     }
 }
 

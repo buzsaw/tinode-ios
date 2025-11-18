@@ -389,6 +389,13 @@ open class Topic<DP: Codable & Mergeable, DR: Codable & Mergeable, SP: Codable, 
     public var isChannelType: Bool {
         Tinode.isChannel(name: self.name)
     }
+    public var isUserType: Bool {
+        isSlfType || isP2PType || isGrpType
+    }
+    public static func isUserType(name: String) -> Bool {
+        let tt = Tinode.topicTypeByName(name: name)
+        return tt == .slf || tt == .p2p || tt == .grp
+    }
 
     public var isManager: Bool {
         return description.acs?.isManager ?? false

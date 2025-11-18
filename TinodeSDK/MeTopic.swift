@@ -2,7 +2,7 @@
 //  MeTopic.swift
 //  TinodeSDK
 //
-//  Copyright © 2020-2022 Tinode LLC. All rights reserved.
+//  Copyright © 2020-2025 Tinode LLC. All rights reserved.
 //
 
 import Foundation
@@ -179,6 +179,50 @@ open class MeTopic<DP: Codable & Mergeable>: Topic<DP, PrivateType, DP, PrivateT
                 break
             }
         }
+    }
+
+    /// Pin topic to the top of the contact list.
+    ///
+    /// - Parameters:
+    ///     topicName - Name of the topic to pin.
+    ///     pin - If true, pin the topic, otherwise unpin.
+    ///
+    /// - Returns: promise to be resolved/rejected when the server responds to request.
+    public func pinTopic(topicName: String, pin: Bool) -> PromisedReply<ServerMessage> {
+        if MeTopic.isUserType(name: topicName) {
+            return PromisedReply(error: TinodeError.invalidArgument("Invalid topic type to pin"))
+        }
+
+        var tpins: [String] = self.priv?.getPinnedTopics() ?? []
+
+        let found = tpins.contains(topicName)
+        if (pin && found) || (!pin && !found) {
+            // Nothing to do, return resolved promise.
+            return PromisedReply(value: nil)
+        }
+
+        if pin {
+            // Add topic to the top of the pinned list.
+            tpins.insert(topicName, at: 0)
+        } else if let index = tpins.firstIndex(of: topicName) {
+            // Remove topic from the pinned list.
+            tpins.remove(at: index)
+        }
+
+        var newPriv = PrivateType()
+        newPriv.setPinnedTopics(tpins)
+        return setMeta(desc: MetaSetDesc<DP, PrivateType>(pub: nil, priv: newPriv))
+    }
+
+    /// Get the rank of the pinned topic.
+    ///  - Parameter topicName - Name of the topic to check.
+    ///
+    ///  - Returns: numeric rank of the pinned topic in the range 1..N (N being the top, N - the number of pinned topics) or 0 if not pinned.
+    public func pinnedTopicRank(topicName: String) -> Int {
+        guard let priv = priv else {
+            return 0
+        }
+        return priv.getPinnedRank(topicName: topicName)
     }
 
     override public func routeInfo(info: MsgServerInfo) {
