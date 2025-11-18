@@ -2,7 +2,7 @@
 //  BaseDb.swift
 //  ios
 //
-//  Copyright © 2019-2024 Tinode. All rights reserved.
+//  Copyright © 2019-2025 Tinode. All rights reserved.
 //
 
 import Foundation
@@ -12,7 +12,7 @@ import TinodeSDK
 
 public class BaseDb {
     // Current database schema version. Increment on schema changes.
-    public static let kSchemaVersion: Int32 = 111
+    public static let kSchemaVersion: Int32 = 112
 
     // Object statuses. Values are incremented by 10 to make it easier to add new statuses.
     public enum Status: Int, Comparable {
