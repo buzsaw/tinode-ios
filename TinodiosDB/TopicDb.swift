@@ -44,6 +44,7 @@ public class TopicDb {
     public let recv: SQLite.Expression<Int?>
     public let seq: SQLite.Expression<Int?>
     public let clear: SQLite.Expression<Int?>
+    public let subcnt: SQLite.Expression<Int?>
     public let maxDel: SQLite.Expression<Int?>
     public let accessMode: SQLite.Expression<String?>
     public let defacs: SQLite.Expression<String?>
@@ -75,6 +76,7 @@ public class TopicDb {
         self.recv = Expression<Int?>("recv")
         self.seq = Expression<Int?>("seq")
         self.clear = Expression<Int?>("clear")
+        self.subcnt = Expression<Int?>("subcnt")
         self.maxDel = Expression<Int?>("max_del")
         self.accessMode = Expression<String?>("mode")
         self.defacs = Expression<String?>("defacs")
@@ -110,6 +112,7 @@ public class TopicDb {
             t.column(recv)
             t.column(seq)
             t.column(clear)
+            t.column(subcnt)
             t.column(maxDel)
 
             t.column(accessMode)
@@ -153,6 +156,7 @@ public class TopicDb {
         topic.recv = row[self.recv]
         topic.seq = row[self.seq]
         topic.clear = row[self.clear]
+        topic.subCnt = row[self.subcnt] ?? 0
         topic.maxDel = row[self.maxDel] ?? 0
         (topic as? MeTopicProto)?.deserializeCreds(from: row[self.creds])
         topic.tags = row[self.tags]?.components(separatedBy: ",")
@@ -239,6 +243,7 @@ public class TopicDb {
                     recv <- topic.recv,
                     seq <- topic.seq,
                     clear <- topic.clear,
+                    subcnt <- topic.subCnt,
                     maxDel <- topic.maxDel,
 
                     accessMode <- topic.accessMode?.serialize(),
@@ -289,6 +294,7 @@ public class TopicDb {
         setters.append(self.recv <- topic.recv)
         setters.append(self.seq <- topic.seq)
         setters.append(self.clear <- topic.clear)
+        setters.append(self.subcnt <- topic.subCnt)
         setters.append(self.accessMode <- topic.accessMode?.serialize())
         setters.append(self.defacs <- topic.defacs?.serialize())
         setters.append(self.tags <- topic.tags?.joined(separator: ","))

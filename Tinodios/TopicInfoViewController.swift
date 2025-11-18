@@ -18,11 +18,12 @@ class TopicInfoViewController: UITableViewController {
     private static let kSectionExtended = 1
     private static let kSectionExtendedAddress = 0
     private static let kSectionExtendedAlias = 1
-    private static let kSectionExtendedVerified = 2
-    private static let kSectionExtendedStaff = 3
-    private static let kSectionExtendedDanger = 4
-    private static let kSectionExtendedPrivate = 5
-    private static let kSectionExtendedDescription = 6
+    private static let kSectionExtendedSubCnt = 2
+    private static let kSectionExtendedVerified = 3
+    private static let kSectionExtendedStaff = 4
+    private static let kSectionExtendedDanger = 5
+    private static let kSectionExtendedPrivate = 6
+    private static let kSectionExtendedDescription = 7
 
     private static let kSectionQuickAction = 2
     private static let kSectionQuickActionMute = 0
@@ -37,6 +38,8 @@ class TopicInfoViewController: UITableViewController {
     @IBOutlet weak var topicIDLabel: UILabel!
     @IBOutlet weak var lastSeenTimestampLabel: UILabel!
     @IBOutlet weak var aliasLabel: UILabel!
+    @IBOutlet weak var subCntLabel: UILabel!
+    
     @IBOutlet weak var topicPrivateTextView: UITextView!
     @IBOutlet weak var topicDescriptionTextView: UITextView!
 
@@ -120,6 +123,12 @@ class TopicInfoViewController: UITableViewController {
         if let alias = topic.alias {
             aliasLabel.text = "@\(alias)"
             aliasLabel.sizeToFit()
+        }
+
+        debugPrint("TopicInfoViewController.reloadData: subCnt=\(topic.subCnt)")
+        if topic.subCnt > 1 {
+            subCntLabel.text = String(topic.subCnt)
+            subCntLabel.sizeToFit()
         }
 
         avatarImage.set(pub: topic.pub, id: topic.name, deleted: topic.deleted)
@@ -254,7 +263,8 @@ extension TopicInfoViewController {
                 (indexPath.row == TopicInfoViewController.kSectionExtendedAlias && (topic.alias ?? "").isEmpty) ||
                 (indexPath.row == TopicInfoViewController.kSectionExtendedVerified && !(topic?.isVerified ?? false)) ||
                 (indexPath.row == TopicInfoViewController.kSectionExtendedStaff && !(topic?.isStaffManaged ?? false)) ||
-                (indexPath.row == TopicInfoViewController.kSectionExtendedDanger && !(topic?.isDangerous ?? false)) {
+                (indexPath.row == TopicInfoViewController.kSectionExtendedDanger && !(topic?.isDangerous ?? false)) ||
+                (indexPath.row == TopicInfoViewController.kSectionExtendedSubCnt && (topic?.subCnt ?? 0) == 0) {
                 return CGFloat.leastNonzeroMagnitude
             }
         } else if indexPath.section == TopicInfoViewController.kSectionQuickAction {

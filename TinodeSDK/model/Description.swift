@@ -28,6 +28,8 @@ public class Description<DP: Codable & Mergeable, DR: Codable & Mergeable>: Desc
     var getRecv: Int { return recv ?? 0 }
     var clear: Int? = 0
     var getClear: Int { return clear ?? 0 }
+    // Merged from Subscription.
+    var subcnt: Int = 0
 
     var pub: DP?
     var priv: DR?
@@ -37,7 +39,7 @@ public class Description<DP: Codable & Mergeable, DR: Codable & Mergeable>: Desc
 
     private enum CodingKeys: String, CodingKey {
         case created, updated, touched,
-             defacs, acs, seq, read, recv, clear,
+             defacs, acs, seq, read, recv, clear, subcnt,
              pub = "public", priv = "private", trusted, seen
     }
 
@@ -111,6 +113,11 @@ public class Description<DP: Codable & Mergeable, DR: Codable & Mergeable>: Desc
             clear = desc.getClear
             changed = true
         }
+        debugPrint("Merging desc subcnt \(desc.subcnt) into \(subcnt)")
+        if desc.subcnt > 0  && subcnt != desc.subcnt {
+            subcnt = desc.subcnt
+            changed = true
+        }
         if let spub = desc.pub {
             changed = mergePub(with: spub) || changed
         }
@@ -122,7 +129,6 @@ public class Description<DP: Codable & Mergeable, DR: Codable & Mergeable>: Desc
         if let trusted = desc.trusted {
             changed = mergeTrusted(with: trusted) || changed
         }
-
         if let dseen = desc.seen {
             if seen == nil {
                 seen = dseen
@@ -185,6 +191,10 @@ public class Description<DP: Codable & Mergeable, DR: Codable & Mergeable>: Desc
             } else {
                 changed = seen!.merge(seen: sub.seen) || changed
             }
+        }
+        if sub.subcnt > 0  && subcnt != sub.subcnt {
+            subcnt = sub.subcnt
+            changed = true
         }
         return changed
     }

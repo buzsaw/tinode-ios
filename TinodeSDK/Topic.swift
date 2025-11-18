@@ -24,6 +24,7 @@ public protocol TopicProto: AnyObject {
     var recv: Int? { get set }
     var seq: Int? { get set }
     var clear: Int? { get set }
+    var subCnt: Int { get set }
     var payload: Payload? { get set }
     var tags: [String]? { get set }
     var isNew: Bool { get }
@@ -287,6 +288,17 @@ open class Topic<DP: Codable & Mergeable, DR: Codable & Mergeable, SP: Codable, 
         set {
             if (newValue ?? -1) > (description.clear ?? -1) {
                 description.clear = newValue
+            }
+        }
+    }
+
+    public var subCnt: Int {
+        get {
+            return description.subcnt
+        }
+        set {
+            if newValue > 0 {
+                description.subcnt = newValue
             }
         }
     }

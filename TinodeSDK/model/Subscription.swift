@@ -46,6 +46,7 @@ public protocol SubscriptionProto: AnyObject, Decodable {
     var clear: Int? { get set }
     var getClear: Int { get }
     var seen: LastSeen? { get set }
+    var subcnt: Int { get set }
     var uniqueId: String? { get }
     func serializePub() -> String?
     @discardableResult
@@ -93,6 +94,7 @@ public class Subscription<SP: Codable, SR: Codable>: Codable, SubscriptionProto 
     public var getSeq: Int { return seq ?? 0 }
     public var clear: Int? = 0
     public var getClear: Int { return clear ?? 0 }
+    public var subcnt: Int = 0
     public var pub: SP?
     public var trusted: TrustedType?
     public var seen: LastSeen?
@@ -109,9 +111,9 @@ public class Subscription<SP: Codable, SR: Codable>: Codable, SubscriptionProto 
     }
 
     private enum CodingKeys: String, CodingKey {
-        case user, updated, deleted, touched,
-             acs, read, recv, priv = "private", online,
-             topic, seq, clear, pub = "public", trusted, seen
+        case user, updated, deleted, touched, acs, read, recv,
+             priv = "private", online, topic, seq, clear, subcnt,
+             pub = "public", trusted, seen
     }
 
     func updateAccessMode(ac: AccessChange?) {
@@ -169,6 +171,10 @@ public class Subscription<SP: Codable, SR: Codable>: Codable, SubscriptionProto 
         }
         if getClear < sub.getClear {
             clear = sub.getClear
+            changed = true
+        }
+        if sub.subcnt > 0 && subcnt != sub.subcnt {
+            subcnt = sub.subcnt
             changed = true
         }
         if getSeq < sub.getSeq {
