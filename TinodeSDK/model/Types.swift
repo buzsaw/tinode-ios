@@ -62,14 +62,16 @@ extension PrivateType: Mergeable {
     }
 
     public func getPinnedTopics() -> [String]? {
-        guard let raw = self["tpin"]?.asArray() else { return nil }
-        let tpins = raw.compactMap { $0.asString() }
-        return tpins.isEmpty ? nil : tpins
+        guard let raw = self["tpin"] else { return nil }
+        guard let nullValue = raw.asString(), nullValue == Tinode.kNullValue else {
+            return raw.asArray()?.compactMap { $0.asString() }
+        }
+        return []
     }
 
-    public mutating func setPinnedTopics(_ tpins: [String]?) {
-        guard let tpins = tpins, !tpins.isEmpty else {
-            self["tpin"] = nil
+    public mutating func setPinnedTopics(_ tpins: [String]) {
+        guard !tpins.isEmpty else {
+            self["tpin"] = .string(Tinode.kNullValue)
             return
         }
         self["tpin"] = .array(tpins.map { .string($0) })

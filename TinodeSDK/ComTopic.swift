@@ -96,7 +96,7 @@ public class ComTopic: Topic<TheCard, PrivateType, TheCard, PrivateType> {
         var pinned = getAux(key: "pins")?.asArray() ?? []
         var changed = false
         if pin {
-            if !isPinned(seq: seq) {
+            if !isMsgPinned(seq: seq) {
                 changed = true
                 if pinned.count == Tinode.kMaxPinnedCount {
                     // Too many elements: drop the earliest.
@@ -119,28 +119,28 @@ public class ComTopic: Topic<TheCard, PrivateType, TheCard, PrivateType> {
         return PromisedReply<ServerMessage>(value: ServerMessage())
     }
 
-    public func isPinned(seq: Int) -> Bool {
+    public func isMsgPinned(seq: Int) -> Bool {
         let pinned = getAux(key: "pins")?.asArray()
         return pinned?.contains(where: { $0.asInt() == seq }) ?? false
      }
 
-    public func pinnedIndex(seq: Int) -> Int {
+    public func pinnedMsgIndex(seq: Int) -> Int {
         let pinned = getAux(key: "pins")?.asArray()
         return pinned?.first(where: { $0.asInt() == seq })?.asInt() ?? -1
      }
 
-    public var pinned: [Int] {
+    public var pinnedMsg: [Int] {
         guard let pinned = getAux(key: "pins")?.asArray() else { return [] }
         return pinned.map { $0.asInt() ?? -1 }.filter { $0 > 0 }
     }
 
-    public var pinnedCount: Int {
+    public var pinnedMsgCount: Int {
         guard let pinned = getAux(key: "pins")?.asArray() else { return 0 }
         return pinned.count
     }
 
-    public var pinHash: Int {
-        pinned.hashValue
+    public var pinMsgHash: Int {
+        pinnedMsg.hashValue
     }
 
     /// First read messages from the local cache. If cache does not contain enough messages, fetch more from the server.

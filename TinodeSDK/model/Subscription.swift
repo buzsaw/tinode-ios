@@ -46,7 +46,7 @@ public protocol SubscriptionProto: AnyObject, Decodable {
     var clear: Int? { get set }
     var getClear: Int { get }
     var seen: LastSeen? { get set }
-    var subcnt: Int { get set }
+    var subcnt: Int? { get set }
     var uniqueId: String? { get }
     func serializePub() -> String?
     @discardableResult
@@ -94,7 +94,7 @@ public class Subscription<SP: Codable, SR: Codable>: Codable, SubscriptionProto 
     public var getSeq: Int { return seq ?? 0 }
     public var clear: Int? = 0
     public var getClear: Int { return clear ?? 0 }
-    public var subcnt: Int = 0
+    public var subcnt: Int? = 0
     public var pub: SP?
     public var trusted: TrustedType?
     public var seen: LastSeen?
@@ -173,8 +173,8 @@ public class Subscription<SP: Codable, SR: Codable>: Codable, SubscriptionProto 
             clear = sub.getClear
             changed = true
         }
-        if sub.subcnt > 0 && subcnt != sub.subcnt {
-            subcnt = sub.subcnt
+        if let cnt = sub.subcnt, cnt > 0 && subcnt != cnt {
+            subcnt = cnt
             changed = true
         }
         if getSeq < sub.getSeq {

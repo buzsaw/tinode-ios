@@ -54,12 +54,15 @@ public class SqlStore: Storage {
     public var isReady: Bool { get { return self.dbh?.isReady ?? false }}
 
     public func topicGetAll(from tinode: Tinode?) -> [TopicProto]? {
+        debugPrint("SqlStore.topicGetAll")
         guard let tdb = self.dbh?.topicDb, let rows = tdb.query() else {
             return nil
         }
         var results: [TopicProto] = []
         for r in rows {
+            debugPrint("SqlStore.topicGetAll, read row: \(r)")
             if let t = tdb.readOne(for: tinode, row: r) {
+                debugPrint("SqlStore.topicGetAll, loaded topic name: \(t.name)")
                 results.append(t)
             }
         }

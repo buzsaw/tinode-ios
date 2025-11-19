@@ -57,6 +57,7 @@ public class TopicDb {
     public let pub: SQLite.Expression<String?>
     public let priv: SQLite.Expression<String?>
     public let trusted: SQLite.Expression<String?>
+    public let pinned: SQLite.Expression<Int?>
 
     private let baseDb: BaseDb!
 
@@ -89,6 +90,7 @@ public class TopicDb {
         self.pub = Expression<String?>("pub")
         self.priv = Expression<String?>("priv")
         self.trusted = Expression<String?>("trusted")
+        self.pinned = Expression<Int?>("pinned")
     }
     func destroyTable() {
         try! self.db.run(self.table.dropIndex(accountId, topic, ifExists: true))
@@ -127,6 +129,7 @@ public class TopicDb {
             t.column(pub)
             t.column(priv)
             t.column(trusted)
+            t.column(pinned)
         })
         try! db.run(self.table.createIndex(accountId, topic, unique: true, ifNotExists: true))
     }
@@ -141,6 +144,8 @@ public class TopicDb {
     }
 
     func deserializeTopic(topic: TopicProto, row: Row) {
+        debugPrint("TopicDb - deserializeTopic: topic=\(topic.name)")
+
         let st = StoredTopic()
         st.id = row[self.id]
         st.status = BaseDb.Status(rawValue: row[self.status] ?? 0) ?? .undefined
@@ -166,8 +171,10 @@ public class TopicDb {
         topic.deserializePub(from: row[self.pub])
         topic.deserializePriv(from: row[self.priv])
         topic.deserializeTrusted(from: row[self.trusted])
+        topic.pinnedRank = row[self.pinned] ?? 0
         topic.payload = st
     }
+
     public func getId(topic: String?) -> Int64 {
         guard let topic = topic else {
             return -1
@@ -257,7 +264,8 @@ public class TopicDb {
                     creds <- (topic as? MeTopicProto)?.serializeCreds(),
                     pub <- topic.serializePub(),
                     priv <- topic.serializePriv(),
-                    trusted <- topic.serializeTrusted()
+                    trusted <- topic.serializeTrusted(),
+                    pinned <- topic.pinnedRank
                 ))
             if rowid > 0 {
                 let st = StoredTopic()
@@ -304,6 +312,7 @@ public class TopicDb {
         setters.append(self.pub <- topic.serializePub())
         setters.append(self.priv <- topic.serializePriv())
         setters.append(self.trusted <- topic.serializeTrusted())
+        setters.append(self.pinned <- topic.pinnedRank)
         if let touched = topic.touched {
             setters.append(self.lastUsed <- touched)
         }

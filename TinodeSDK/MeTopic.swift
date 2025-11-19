@@ -36,6 +36,15 @@ open class MeTopic<DP: Codable & Mergeable>: Topic<DP, PrivateType, DP, PrivateT
         super.init(tinode: tinode, name: Tinode.kTopicMe, desc: desc)
     }
 
+    override public var pinnedRank: Int? {
+        get {
+            return 0
+        }
+        set {
+            // No-op: 'me' topic cannot be pinned.
+        }
+    }
+
     public func serializeCreds() -> String? {
         guard let c = self.creds else { return nil }
         return Tinode.serializeObject(c)
@@ -158,7 +167,12 @@ open class MeTopic<DP: Codable & Mergeable>: Topic<DP, PrivateType, DP, PrivateT
     }
 
     override internal func update(ctrl: MsgServerCtrl, meta: MsgSetMeta<DP, PrivateType>) {
+        if let desc = meta.desc {
+            updatePinnedTopics(priv: desc.priv)
+        }
+
         super.update(ctrl: ctrl, meta: meta)
+
         if let cred = meta.cred {
             routeMetaCred(cred: cred)
 
@@ -184,12 +198,12 @@ open class MeTopic<DP: Codable & Mergeable>: Topic<DP, PrivateType, DP, PrivateT
     /// Pin topic to the top of the contact list.
     ///
     /// - Parameters:
-    ///     topicName - Name of the topic to pin.
-    ///     pin - If true, pin the topic, otherwise unpin.
+    ///  - topicName - Name of the topic to pin.
+    ///  - pin - If true, pin the topic, otherwise unpin.
     ///
     /// - Returns: promise to be resolved/rejected when the server responds to request.
     public func pinTopic(topicName: String, pin: Bool) -> PromisedReply<ServerMessage> {
-        if MeTopic.isUserType(name: topicName) {
+        if !MeTopic.isUserType(name: topicName) {
             return PromisedReply(error: TinodeError.invalidArgument("Invalid topic type to pin"))
         }
 
@@ -215,7 +229,8 @@ open class MeTopic<DP: Codable & Mergeable>: Topic<DP, PrivateType, DP, PrivateT
     }
 
     /// Get the rank of the pinned topic.
-    ///  - Parameter topicName - Name of the topic to check.
+    ///  - Parameters:
+    ///   - topicName - name of the topic to check.
     ///
     ///  - Returns: numeric rank of the pinned topic in the range 1..N (N being the top, N - the number of pinned topics) or 0 if not pinned.
     public func pinnedTopicRank(topicName: String) -> Int {
@@ -223,6 +238,33 @@ open class MeTopic<DP: Codable & Mergeable>: Topic<DP, PrivateType, DP, PrivateT
             return 0
         }
         return priv.getPinnedRank(topicName: topicName)
+    }
+
+    private func updatePinnedTopics(priv newPriv: PrivateType?) {
+        guard let newPins = newPriv?.getPinnedTopics() else {
+            return
+        }
+        // Update pinned rank for all pinned topics.
+        var rank = newPins.count
+        for topicName in newPins {
+            if let topic = tinode?.getTopic(topicName: topicName) {
+                topic.pinnedRank = rank
+                store?.topicUpdate(topic: topic)
+            }
+            rank -= 1
+        }
+        guard let thesePins = self.priv?.getPinnedTopics(), !thesePins.isEmpty else {
+            return
+        }
+        // Unpin topics that were removed from the pinned list.
+        for topicName in thesePins {
+            if !newPins.contains(topicName) {
+                if let topic = tinode?.getTopic(topicName: topicName) {
+                    topic.pinnedRank = 0
+                    store?.topicUpdate(topic: topic)
+                }
+            }
+        }
     }
 
     override public func routeInfo(info: MsgServerInfo) {
@@ -240,6 +282,14 @@ open class MeTopic<DP: Codable & Mergeable>: Topic<DP, PrivateType, DP, PrivateT
     override public func routeMeta(meta: MsgServerMeta) {
         if let cred = meta.cred {
             routeMetaCred(cred: cred)
+        }
+
+        if let desc = meta.desc as? DefaultDescription {
+            updatePinnedTopics(priv: desc.priv)
+            // Create or update 'me' user in storage.
+            if let myUid = tinode?.myUid {
+                tinode!.updateUser(uid: myUid, desc: desc)
+            }
         }
         super.routeMeta(meta: meta)
     }
@@ -348,7 +398,10 @@ open class MeTopic<DP: Codable & Mergeable>: Topic<DP, PrivateType, DP, PrivateT
     override internal func routeMetaSub(meta: MsgServerMeta) {
         if let metaSubs = meta.sub as? [Subscription<DP, PrivateType>] {
             for sub in metaSubs {
-                if let topic = tinode!.getTopic(topicName: sub.topic!) {
+                var topic = tinode!.getTopic(topicName: sub.topic!)
+                let pinnedTopicRank = pinnedTopicRank(topicName: sub.topic!)
+                if let topic = topic {
+                    // Existing topic. Update or delete.
                     if sub.deleted != nil {
                         if topic.deleted {
                             topic.expunge(hard: true)
@@ -358,6 +411,7 @@ open class MeTopic<DP: Codable & Mergeable>: Topic<DP, PrivateType, DP, PrivateT
                         }
                     } else {
                         if let t = topic as? DefaultTopic {
+                            t.pinnedRank = pinnedRank
                             t.update(sub: sub as! Subscription<TheCard, PrivateType>)
                         } else if let t = topic as? DefaultMeTopic {
                             t.update(sub: sub as! Subscription<TheCard, PrivateType>)
@@ -368,9 +422,12 @@ open class MeTopic<DP: Codable & Mergeable>: Topic<DP, PrivateType, DP, PrivateT
                     }
                 } else if sub.deleted == nil {
                     // This is a new topic. Register it and write to DB.
-                    let topic = tinode!.newTopic(sub: sub)
-                    topic.persist()
+                    // Persist will also create a user in case of a p2p topic.
+                    topic = tinode!.newTopic(sub: sub)
+                    topic!.pinnedRank = pinnedTopicRank
+                    topic!.persist()
                 }
+
                 listener?.onMetaSub(sub: sub)
             }
         }

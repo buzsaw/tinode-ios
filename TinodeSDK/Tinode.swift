@@ -1332,7 +1332,12 @@ public class Tinode {
         var result = topics.values.filter { (topic) -> Bool in
             return filter(topic)
         }
-        result.sort(by: { ($0.touched ?? Date.distantPast) > ($1.touched ?? Date.distantPast) })
+        // Sort first by pinned rank descending, then by last touched descending.
+        result.sort(by: {
+            ($0.pinnedRank ?? 0) != ($1.pinnedRank ?? 0) ?
+                ($0.pinnedRank ?? 0) > ($1.pinnedRank ?? 0) :
+                ($0.touched ?? Date.distantPast) > ($1.touched ?? Date.distantPast)
+        })
         return result
     }
 

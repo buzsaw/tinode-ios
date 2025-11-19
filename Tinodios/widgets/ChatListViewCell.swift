@@ -13,6 +13,8 @@ class ChatListViewCell: UITableViewCell {
     private static let kMessageStatusWidth: CGFloat = 14
     private static let kIconSeparator: CGFloat = 4
 
+    private static let kPinnedBackgroundColor = UIColor.secondarySystemBackground
+
     @IBOutlet weak var icon: AvatarWithOnlineIndicator!
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var subtitle: UILabel!
@@ -49,9 +51,15 @@ class ChatListViewCell: UITableViewCell {
     }
 
     public func fillFromTopic(topic: DefaultComTopic) {
+        if (topic.pinnedRank ?? 0) > 0 {
+            backgroundColor = ChatListViewCell.kPinnedBackgroundColor
+        } else {
+            backgroundColor = UIColor.systemBackground
+        }
         title.text = topic.isSlfType ? NSLocalizedString("Saved messages", comment: "Title of the slf topic") :
             topic.pub?.fn ?? NSLocalizedString("Unknown or unnamed", comment: "Topic title when it has no name")
         title.sizeToFit()
+
         if let msg = topic.latestMessage as? StoredMessage {
             // If we have a latestMessage and its up to date.
             subtitle.attributedText = msg.attributedPreview(fitIn: subtitle.frame.size)

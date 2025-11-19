@@ -2,7 +2,7 @@
 //  Description.swift
 //  ios
 //
-//  Copyright © 2019-2022 Tinode LLC. All rights reserved.
+//  Copyright © 2019-2025 Tinode LLC. All rights reserved.
 //
 
 import Foundation
@@ -192,8 +192,8 @@ public class Description<DP: Codable & Mergeable, DR: Codable & Mergeable>: Desc
                 changed = seen!.merge(seen: sub.seen) || changed
             }
         }
-        if sub.subcnt > 0  && subcnt != sub.subcnt {
-            subcnt = sub.subcnt
+        if let cnt = sub.subcnt, cnt > 0  && subcnt != cnt {
+            subcnt = cnt
             changed = true
         }
         return changed

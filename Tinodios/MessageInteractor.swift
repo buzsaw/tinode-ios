@@ -168,7 +168,7 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
             }
         }
 
-        if let pins = topic?.pinned {
+        if let pins = topic?.pinnedMsg {
             self.presenter?.displayPinnedMessages(pins: pins, selected: 0)
         }
 
@@ -877,23 +877,23 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
     }
     override func onMetaAux(aux: [String:JSONValue]) {
         guard let topic = topic else { return }
-        self.presenter?.displayPinnedMessages(pins: topic.pinned, selected: -1)
+        self.presenter?.displayPinnedMessages(pins: topic.pinnedMsg, selected: -1)
     }
 
     override func onAllMessagesReceived(count: Int) {
         guard let topic = topic else { return }
 
-        let currentPinHash = topic.pinHash
+        let currentPinHash = topic.pinMsgHash
         if self.pinHash == currentPinHash {
             return
         }
         self.pinHash = currentPinHash
 
         // Make sure all pinned messages are cached.
-        guard let pinsArray = MsgRange.toRanges(topic.pinned) else { return }
+        guard let pinsArray = MsgRange.toRanges(topic.pinnedMsg) else { return }
         let found = BaseDb.sharedInstance.sqlStore?.msgIsCached(topic: topic, ranges: pinsArray) ?? []
         var missing: [MsgRange] = []
-        if found.count <= topic.pinned.count {
+        if found.count <= topic.pinnedMsg.count {
             missing = pinsArray
             for f in found {
                 var tmp: [MsgRange] = []

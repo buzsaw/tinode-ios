@@ -18,6 +18,7 @@ protocol ChatListBusinessLogic: AnyObject {
     func cleanup()
     func deleteTopic(_ name: String)
     func changeArchivedStatus(forTopic name: String, archived: Bool)
+    func changePinnedStatus(forTopic name: String, pinned: Bool)
 }
 
 protocol ChatListDataStore: AnyObject {
@@ -170,6 +171,17 @@ class ChatListInteractor: ChatListBusinessLogic, ChatListDataStore {
     func changeArchivedStatus(forTopic name: String, archived: Bool) {
         let topic = Cache.tinode.getTopic(topicName: name) as! DefaultComTopic
         topic.updateArchived(archived: archived)?.then(
+            onSuccess: { [weak self] _ in
+                self?.loadAndPresentTopics()
+                return nil
+            },
+            onFailure: UiUtils.ToastFailureHandler
+        )
+    }
+
+    func changePinnedStatus(forTopic name: String, pinned: Bool) {
+        let me = Cache.tinode.getMeTopic()!
+        me.pinTopic(topicName: name, pin: pinned).then(
             onSuccess: { [weak self] _ in
                 self?.loadAndPresentTopics()
                 return nil

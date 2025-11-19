@@ -2,7 +2,7 @@
 //  ChatListViewController.swift
 //  Tinodios
 //
-//  Copyright © 2019 Tinode. All rights reserved.
+//  Copyright © 2019-2025 Tinode. All rights reserved.
 //
 
 import UIKit
@@ -108,7 +108,7 @@ class ChatListViewController: UITableViewController, ChatListDisplayLogic {
         self.interactor?.cleanup()
         self.interactor?.leaveMeTopic()
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -182,22 +182,32 @@ extension ChatListViewController {
 
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         // Delete item at indexPath
-        let delete = UIContextualAction(style: .destructive, title: NSLocalizedString("Delete", comment: "Swipe action"), handler: { _,_,_ in
-            let topic = self.topics[indexPath.row]
+        let topic = self.topics[indexPath.row]
+        let delete = UIContextualAction(style: .destructive, title: NSLocalizedString("Delete", comment: "Swipe action on chat"), handler: { _,_,_ in
             self.interactor?.deleteTopic(topic.name)
         })
-        let archive = UIContextualAction(style: .normal, title: NSLocalizedString("Archive", comment: "Swipe action"), handler: { _,_,_ in
-            let topic = self.topics[indexPath.row]
-            self.interactor?.changeArchivedStatus(
-                forTopic: topic.name, archived: !topic.isArchived)
-        })
 
-        return UISwipeActionsConfiguration(actions: [delete, archive])
+        return UISwipeActionsConfiguration(actions: [delete])
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         self.performSegue(withIdentifier: "Chats2Messages", sender: self.topics[indexPath.row].name)
+    }
+
+    override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let topic = topics[indexPath.row]
+        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil) { _ -> UIMenu? in
+            let archiveTitle = topic.isArchived ? NSLocalizedString("Unarchive", comment: "Popup meu item") : NSLocalizedString("Archive", comment: "Popup meu item")
+            let archive = UIAction(title: archiveTitle, image: UIImage(systemName: "archivebox")) { [weak self] _ in
+                self?.interactor?.changeArchivedStatus(forTopic: topic.name, archived: !topic.isArchived)
+            }
+            let pinTitle = topic.pinnedRank == 0 ? NSLocalizedString("Pin", comment: "Popup meu item") : NSLocalizedString("Unpin", comment: "Popup meu item")
+            let pin = UIAction(title: pinTitle, image: UIImage(systemName: "pin")) { [weak self] _ in
+                self?.interactor?.changePinnedStatus(forTopic: topic.name, pinned: topic.pinnedRank == 0)
+            }
+            return UIMenu(title: "", children: [archive, pin])
+        }
     }
 }
 

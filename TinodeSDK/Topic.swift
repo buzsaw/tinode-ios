@@ -43,6 +43,7 @@ public protocol TopicProto: AnyObject {
     var isDangerous: Bool { get }
     var unread: Int { get }
     var latestMessage: Message? { get set }
+    var pinnedRank: Int? { get set }
 
     func serializePub() -> String?
     func serializePriv() -> String?
@@ -377,6 +378,8 @@ open class Topic<DP: Codable & Mergeable, DR: Codable & Mergeable, SP: Codable, 
         }
     }
 
+    public var pinnedRank: Int?
+
     public var topicType: TopicType {
         return Tinode.topicTypeByName(name: self.name)
     }
@@ -574,10 +577,11 @@ open class Topic<DP: Codable & Mergeable, DR: Codable & Mergeable, SP: Codable, 
 
     public func persist() {
         if !isPersisted {
+            debugPrint("Persisting topic \(self.name), store is \(store == nil ? "nil" : "NOT nil")")
             store?.topicAdd(topic: self)
-           if isP2PType {
-               tinode?.updateUser(uid: self.name, desc: self.description)
-           }
+            if isP2PType {
+                tinode?.updateUser(uid: self.name, desc: self.description)
+            }
         }
     }
 
