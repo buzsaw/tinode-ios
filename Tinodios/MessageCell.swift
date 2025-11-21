@@ -10,8 +10,6 @@ import TinodeSDK
 
 /// A protocol used to detect events in the chat message.
 protocol MessageCellDelegate: AnyObject {
-    /// Long tap anywhere in massage cell.
-    func didLongTap(in cell: MessageCell)
     /// Tap on the message bubble.
     func didTapMessage(in cell: MessageCell)
     /// Tap on message content.
@@ -30,10 +28,14 @@ protocol MessageCellDelegate: AnyObject {
     func didEndMediaPlayback(in cell: MessageCell, audioPlayer: VLCMediaPlayer)
     /// Seek operation completed.
     func didSeekMedia(in cell: MessageCell, audioPlayer: VLCMediaPlayer, pos: Float)
+
+    /// Asks the delegate for the context menu actions for the given cell.
+    func contextMenuActions(for cell: MessageCell) -> [UIAction]
 }
 
 // Optional date, avatar, sender name, message bubble: content, delivery marker, timestamp.
 class MessageCell: UICollectionViewCell {
+    var menuActions: [UIAction] = []
 
     var seqId: Int = 0
     var isDeleted: Bool = false
@@ -149,7 +151,10 @@ class MessageCell: UICollectionViewCell {
         containerView.addSubview(timestampLabel)
         containerView.addSubview(deliveryMarker)
         containerView.addSubview(editedMarker)
+        containerView.addInteraction(UIContextMenuInteraction(delegate: self))
+        containerView.isUserInteractionEnabled = true
         contentView.addSubview(avatarView)
+
     }
 
     func showProgressBar() {
@@ -179,15 +184,12 @@ class MessageCell: UICollectionViewCell {
         mediaEntityKey = nil
 
         timeStamp = nil
+
+        menuActions = []
     }
 
     /// Handle tap gesture on contentView and its subviews.
     func handleTapGesture(_ gesture: UIGestureRecognizer) {
-        if gesture.isKind(of: UILongPressGestureRecognizer.self) {
-            delegate?.didLongTap(in: self)
-            return
-        }
-
         let touchLocation = gesture.location(in: self)
 
         switch true {
@@ -217,6 +219,11 @@ class MessageCell: UICollectionViewCell {
         return containerView.frame.contains(touchPoint)
     }
 
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        // This is for the old UIMenuController. It can be removed once the migration is complete.
+        return !menuActions.isEmpty
+    }
+
     /// This is needed for the context menu to work correctly.
     override var canBecomeFirstResponder: Bool {
         return true
@@ -235,6 +242,19 @@ class MessageCell: UICollectionViewCell {
         }
         UIView.animate(withDuration: halfDuration) {
             self.containerView.backgroundColor = self.containerView.backgroundColor?.lighter()
+        }
+    }
+}
+
+extension MessageCell: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        guard let delegate = self.delegate else { return nil }
+
+        let actions = delegate.contextMenuActions(for: self)
+        guard !actions.isEmpty else { return nil }
+
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            return UIMenu(title: "", children: actions)
         }
     }
 }

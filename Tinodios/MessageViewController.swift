@@ -172,7 +172,6 @@ class MessageViewController: UIViewController {
     private weak var goToLatestButton: UIButton!
     private var goToLatestButtonBottomAnchor: NSLayoutConstraint!
 
-
     var interactor: (MessageBusinessLogic & MessageDataStore)?
     let refreshControl = UIRefreshControl()
 

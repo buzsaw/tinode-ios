@@ -180,9 +180,11 @@ class ChatListInteractor: ChatListBusinessLogic, ChatListDataStore {
     }
 
     func changePinnedStatus(forTopic name: String, pinned: Bool) {
+        debugPrint("Changing pinned status for topic \(name) to \(pinned)")
         let me = Cache.tinode.getMeTopic()!
         me.pinTopic(topicName: name, pin: pinned).then(
             onSuccess: { [weak self] _ in
+                debugPrint("SUCCESS: Pinned status changed for topic \(name) to \(pinned)")
                 self?.loadAndPresentTopics()
                 return nil
             },
