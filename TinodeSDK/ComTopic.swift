@@ -68,6 +68,12 @@ public class ComTopic: Topic<TheCard, PrivateType, TheCard, PrivateType> {
     }
 
     override public func getSubscription(for key: String?) -> Subscription<TheCard, PrivateType>? {
+        if isSlfType {
+            let sub = Subscription<TheCard, PrivateType>()
+            sub.pub = self.pub
+            return sub
+        }
+
         guard let sub = super.getSubscription(for: key) else { return nil }
         if isP2PType && sub.pub == nil {
             sub.pub = self.name == key ? self.pub : tinode?.getMeTopic()?.pub
