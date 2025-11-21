@@ -138,7 +138,6 @@
 		B0DF03312283FFD8000F9492 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DF03302283FFD8000F9492 /* PlaceholderTextView.swift */; };
 		B0E6F5EF2DF44DFF00A8B1FF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B0E6F5ED2DF44DFF00A8B1FF /* InfoPlist.strings */; };
 		B0F2F0C929DA295900100B24 /* MessageViewController+MessageDisplayLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0F2F0C829DA295900100B24 /* MessageViewController+MessageDisplayLogic.swift */; };
-		B0F98C8322E381C300444121 /* MessageMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0F98C8222E381C300444121 /* MessageMenuItem.swift */; };
 		FA37AD24238B0D6F00301261 /* KeyboardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA37AD23238B0D6F00301261 /* KeyboardInfo.swift */; };
 /* End PBXBuildFile section */
 
@@ -372,7 +371,6 @@
 		B0E6F5F62DF44E4800A8B1FF /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		B0E6F5F82DF44E5700A8B1FF /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		B0F2F0C829DA295900100B24 /* MessageViewController+MessageDisplayLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageViewController+MessageDisplayLogic.swift"; sourceTree = "<group>"; };
-		B0F98C8222E381C300444121 /* MessageMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageMenuItem.swift; sourceTree = "<group>"; };
 		B33FA5FDB8E984980BADDAB2 /* Pods-TinodiosUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TinodiosUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TinodiosUITests/Pods-TinodiosUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		B36DC000235D850000724348 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		FA37AD23238B0D6F00301261 /* KeyboardInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardInfo.swift; sourceTree = "<group>"; };
@@ -614,7 +612,6 @@
 				0A3AE3B4274CAD2500CB673E /* ForwardMessageBar.swift */,
 				0A3AE3B6274CAD5800CB673E /* ForwardMessageBar.xib */,
 				B02F5C8A22679BC80079A97E /* ImagePicker.swift */,
-				B0F98C8222E381C300444121 /* MessageMenuItem.swift */,
 				B0BE302927B831D400B04631 /* MultilineAlertView.xib */,
 				B0BE302227B771E100B04631 /* MultilineAlertView.swift */,
 				B02598422D8AD8EC00965CEA /* NoContentView.swift */,
@@ -1081,7 +1078,6 @@
 				0A9E7149237BCC8400C1D491 /* NewChatTabController.swift in Sources */,
 				0A57890927487B9400E77F0C /* ForwardToViewController.swift in Sources */,
 				0A0016E921E736CD00088188 /* MessagePresenter.swift in Sources */,
-				B0F98C8322E381C300444121 /* MessageMenuItem.swift in Sources */,
 				B0A612B1228C85C300569DFE /* MessageViewLayout.swift in Sources */,
 				B091BA58282DA01200317CDC /* SendForwardedFormatter.swift in Sources */,
 				B0133AE523D1ACBD00C813CA /* SendImageBar.swift in Sources */,
