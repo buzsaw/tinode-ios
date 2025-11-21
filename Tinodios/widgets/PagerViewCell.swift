@@ -2,43 +2,30 @@
 //  PagerViewCell.swift
 //  Tinodios
 //
-//  Copyright © 2023 Tinode LLC. All rights reserved.
+//  Copyright © 2023-2025 Tinode LLC. All rights reserved.
 //
 
-import UIKit
+import SwiftUI
 
-public class PagerViewCell: UICollectionViewCell {
+struct PagerViewCell: View {
+    let content: UIView
 
-    // MARK: - Initialization
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        self.setup()
+    var body: some View {
+        UIViewWrapper(view: content)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
+}
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+// MARK: - UIView Wrapper
+private struct UIViewWrapper: UIViewRepresentable {
+    let view: UIView
 
-    // MARK: - UI Properties
-    public var view: UIView? {
-        didSet {
-            self.setup()
-        }
-    }
-
-    // MARK: - UI Setup
-    private func setup() {
-        guard let view = view else { return }
-
-        self.contentView.addSubview(view)
+    func makeUIView(context: Context) -> UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
 
-        NSLayoutConstraint.activate([
-            view.leftAnchor.constraint(equalTo: self.contentView.leftAnchor),
-            view.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            view.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
-            view.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
-        ])
+    func updateUIView(_ uiView: UIView, context: Context) {
+        // No updates needed
     }
 }

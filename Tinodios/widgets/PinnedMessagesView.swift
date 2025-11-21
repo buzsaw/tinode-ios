@@ -20,7 +20,7 @@ class PinnedMessagesView: UICollectionReusableView {
     private static let kPinnedCollectionHeight = MessageViewController.Constants.kPinnedMessagesViewHeight - 4
 
     @IBOutlet weak var dotSelectorView: DotSelectorImageView!
-    @IBOutlet weak var pagerView: PagerView!
+    @IBOutlet weak var pagerView: PagerViewWrapper!
 
     public var delegate: PinnedMessagesDelegate?
 

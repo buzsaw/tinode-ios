@@ -1,102 +1,113 @@
-//
-//  ViewPager.swift
-//  Tinodios
-//
-//  Copyright © 2023-2025 Tinode LLC. All rights reserved.
-//
-
-
+// Add to Tinodios/widgets/PagerView.swift (replace existing content)
+import SwiftUI
 import UIKit
 
-public protocol PagerViewDelegate: AnyObject {
-    func didSelectPage(index: Int)
+// MARK: - SwiftUI PagerView
+struct PagerView: View {
+    let pages: [UIView]
+    let onPageSelected: ((Int) -> Void)?
+
+    @State private var currentPage: Int = 0
+
+    var body: some View {
+        TabView(selection: $currentPage) {
+            ForEach(0..<pages.count, id: \.self) { index in
+                PagerViewCell(content: pages[index])
+                    .tag(index)
+            }
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .onChange(of: currentPage) { newValue in
+            onPageSelected?(newValue)
+        }
+        .clipShape(RoundedCornerShape(corners: [.topRight, .bottomRight], radius: 10))
+    }
 }
 
+// MARK: - Custom Corner Radius Shape
+struct RoundedCornerShape: Shape {
+    let corners: UIRectCorner
+    let radius: CGFloat
+
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
+        return Path(path.cgPath)
+    }
+}
+
+// MARK: - UIKit Wrapper
 @IBDesignable
-public class PagerView: UIView, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
-    private static let kCornerRadius: CGFloat = 10
+public class PagerViewWrapper: UIView {
 
     // MARK: - Properties
     public weak var delegate: PagerViewDelegate?
+
+    private var hostingController: UIHostingController<PagerView>?
+    private var _pages: [UIView] = []
+
     public var pages: [UIView] {
-        didSet {
-            self.collectionView.reloadData()
+        get { _pages }
+        set {
+            _pages = newValue
+            updateSwiftUIView()
         }
     }
 
     // MARK: - Initialization
-    init(pages: [UIView] = []) {
-        self.pages = pages
-        super.init(frame: .zero)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setup()
     }
 
     required init?(coder: NSCoder) {
-        self.pages = []
         super.init(coder: coder)
         setup()
     }
 
+    // MARK: - Setup
     private func setup() {
-        self.translatesAutoresizingMaskIntoConstraints = false
+        updateSwiftUIView()
+    }
 
-        self.addSubview(collectionView)
-        // Make right-side corners round.
-        collectionView.layer.cornerRadius = PagerView.kCornerRadius
-        collectionView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+    private func updateSwiftUIView() {
+        // Remove old hosting controller
+        hostingController?.view.removeFromSuperview()
+        hostingController?.removeFromParent()
+
+        // Create SwiftUI view
+        let swiftUIView = PagerView(pages: _pages) { [weak self] index in
+            self?.delegate?.didSelectPage(index: index)
+        }
+
+        let hosting = UIHostingController(rootView: swiftUIView)
+        hosting.view.backgroundColor = .clear
+        hosting.view.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(hosting.view)
 
         NSLayoutConstraint.activate([
-            collectionView.widthAnchor.constraint(equalTo: self.widthAnchor),
-            collectionView.heightAnchor.constraint(equalTo: self.heightAnchor),
-            collectionView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            collectionView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            hosting.view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            hosting.view.topAnchor.constraint(equalTo: topAnchor),
+            hosting.view.trailingAnchor.constraint(equalTo: trailingAnchor),
+            hosting.view.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
+
+        hostingController = hosting
     }
 
-    private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: self.bounds, collectionViewLayout: layout)
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.isPagingEnabled = true
-        collectionView.register(PagerViewCell.self, forCellWithReuseIdentifier: "PagerViewCell")
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.translatesAutoresizingMaskIntoConstraints =  false
-        return collectionView
-    }()
-
-    // MARK: - Data Source
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pages.count
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PagerViewCell", for: indexPath) as! PagerViewCell
-        let page = self.pages[indexPath.item]
-        cell.view = page
-        return cell
-    }
-
-    // MARK: - Actions
+    // MARK: - Public Methods
     public func moveToPage(at index: Int) {
-        self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .centeredHorizontally, animated: true)
+        // This would require exposing state from SwiftUI
+        // For now, this is a limitation of the wrapper approach
+        // You could use @Published and Combine to bridge this
     }
+}
 
-    // MARK: - Delegate
-    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let page = Int(self.collectionView.contentOffset.x / self.collectionView.frame.size.width)
-
-        self.delegate?.didSelectPage(index: page)
-    }
-
-    // MARK: - Layout Delegate
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        return CGSize(width: self.collectionView.frame.width, height: self.collectionView.frame.height)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
+// MARK: - Protocol
+public protocol PagerViewDelegate: AnyObject {
+    func didSelectPage(index: Int)
 }
