@@ -314,7 +314,6 @@ class MessageViewController: UIViewController {
     // MARK: lifecycle
 
     deinit {
-        // removeMenuControllerObservers()
         removeAppStateObservers()
         // Clean up.
         appGoingInactive()

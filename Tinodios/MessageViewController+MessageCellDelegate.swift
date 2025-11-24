@@ -94,14 +94,6 @@ extension MessageViewController: MessageCellDelegate {
         guard !cell.isDeleted else { return [] }
         guard let topic = topic else { return [] }
 
-        // Make cell the first responder otherwise menu will show wrong items.
-        //if sendMessageBar.inputField.isFirstResponder {
-        //    sendMessageBar.inputField.nextResponderOverride = cell
-        //} else {
-        //    cell.becomeFirstResponder()
-        // }
-
-        // Set up the shared UIMenuController
         var actions: [UIAction] = []
         actions.append(UIAction(title: NSLocalizedString("Copy", comment: "Menu item"), handler: { [weak self] _ in self?.copyMessageContent(seqId: cell.seqId)
         }))
@@ -168,16 +160,6 @@ extension MessageViewController: MessageCellDelegate {
         }
 
         return actions
-    }
-
-    @objc func willHidePopupMenu() {
-        if sendMessageBar.inputField.nextResponderOverride != nil {
-            sendMessageBar.inputField.nextResponderOverride!.resignFirstResponder()
-            sendMessageBar.inputField.nextResponderOverride = nil
-        }
-
-        UIMenuController.shared.menuItems = nil
-        NotificationCenter.default.removeObserver(self, name: UIMenuController.willHideMenuNotification, object: nil)
     }
 
     func copyMessageContent(seqId: Int) {
