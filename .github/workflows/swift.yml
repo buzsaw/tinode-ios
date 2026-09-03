@@ -29,12 +29,12 @@ jobs:
       - name: Install dependencies
         run: pod install
 
-      - name: Prepare Firebase config
-        env:
-          GOOGLE_SERVICE_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST_B64 }}
-        run: |
-          echo "$GOOGLE_SERVICE_INFO_PLIST_B64" | base64 -D > Tinodios/GoogleService-Info.plist
-          test -s Tinodios/GoogleService-Info.plist
+      #- name: Prepare Firebase config
+      #  env:
+       #   GOOGLE_SERVICE_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST_B64 }}
+      #  run: |
+       #   echo "$GOOGLE_SERVICE_INFO_PLIST_B64" | base64 -D > Tinodios/GoogleService-Info.plist
+      #    test -s Tinodios/GoogleService-Info.plist
 
       - name: Archive unsigned app
         run: |
