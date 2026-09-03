@@ -1,0 +1,74 @@
+# This workflow will build a Swift project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
+
+name: Build Unsigned IPA
+
+on:
+  push:
+    tags:
+      - v1.7.9
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-11
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: v1.7.9
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode_12.2.app
+          xcodebuild -version
+
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods -v 1.9.3 --no-document
+          pod --version
+
+      - name: Install dependencies
+        run: pod install
+
+      - name: Prepare Firebase config
+        env:
+          GOOGLE_SERVICE_INFO_PLIST_B64: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST_B64 }}
+        run: |
+          echo "$GOOGLE_SERVICE_INFO_PLIST_B64" | base64 -D > Tinodios/GoogleService-Info.plist
+          test -s Tinodios/GoogleService-Info.plist
+
+      - name: Archive unsigned app
+        run: |
+          mkdir -p build
+
+          xcodebuild \
+            -workspace Tinodios.xcworkspace \
+            -scheme Tinodios \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath build/Tinodios.xcarchive \
+            archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: Package unsigned IPA
+        run: |
+          mkdir -p build/ipa/Payload
+
+          cp -R \
+            build/Tinodios.xcarchive/Products/Applications/Tinodios.app \
+            build/ipa/Payload/Tinodios.app
+
+          cd build/ipa
+          ditto -c -k --sequesterRsrc --keepParent \
+            Payload \
+            ../Tinodios-unsigned.ipa
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: Tinodios-v1.7.9-unsigned
+          path: build/Tinodios-unsigned.ipa
