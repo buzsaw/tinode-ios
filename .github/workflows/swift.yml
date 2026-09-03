@@ -4,9 +4,6 @@
 name: Build Unsigned IPA
 
 on:
-  push:
-    tags:
-      - v1.7.9
   workflow_dispatch:
 
 jobs:
